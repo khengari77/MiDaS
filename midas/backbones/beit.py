@@ -69,6 +69,7 @@ def attention_forward(self, x, resolution, shared_rel_pos_bias: Optional[torch.T
     B, N, C = x.shape
 
     qkv_bias = torch.cat((self.q_bias, self.k_bias, self.v_bias)) if self.q_bias is not None else None
+    print(f"QKV weight type {self.qkv.weight}")
     qkv = F.linear(input=x, weight=self.qkv.weight, bias=qkv_bias)
     qkv = qkv.reshape(B, N, 3, self.num_heads, -1).permute(2, 0, 3, 1, 4)
     q, k, v = qkv.unbind(0)  # make torchscript happy (cannot use tensor as tuple)
